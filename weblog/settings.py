@@ -16,9 +16,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-4u&5d_^a(i&s#cnd$3f&z85s@8q3fh@$xct!3ib#l28k7*sl$n'
 
@@ -27,6 +24,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+AUTH_USER_MODEL = "users.User"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR/"media/"
 
 # Application definition
 
