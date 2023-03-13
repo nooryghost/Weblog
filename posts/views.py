@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from .models import Post
 
 class PostListView(generic.ListView):
-    queryset = Post.objects.filter(status=1).order_by("-created_time")
+    queryset = Post.objects.filter(status=1).order_by("-publish")
     template_name = "post/index.html"
 
 class PostDetailView(generic.DetailView):
