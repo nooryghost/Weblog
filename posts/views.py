@@ -6,7 +6,7 @@ from .models import Post
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
-    template_name = "posts_create"
+    template_name = "posts_create.html"
     fields = ("title", "slug", "description", "status", "publish")
 
     def form_valid(self, form):

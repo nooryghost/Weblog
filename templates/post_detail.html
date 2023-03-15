@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Post Detail {{ object.title}}{% endblock %}
+
+{% block content %}
+<h2>{{ object.title }}</h2>
+<p>{{ object.author }} | {{ object.publish }}</p>
+
+<p>
+    <a href="{% url 'posts_edit' post.pk %}">+Edit</a>
+    <a href="{% url 'posts_delete' post.pk %}">-Delete</a>
+</p>
+<p><a href="{% url 'posts_list' %}">All Posts</a></p>
+{% endblock %}
