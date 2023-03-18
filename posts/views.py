@@ -2,11 +2,11 @@ from django.views import generic
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
-from .models import Post
+from .models import Post, Comment
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
-    template_name = "posts_create.html"
+    template_name = "post_create.html"
     fields = ("title", "slug", "description", "status", "publish")
 
     def form_valid(self, form):
@@ -14,8 +14,16 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 class PostListView(generic.ListView):
-    queryset = Post.objects.filter(status=1).order_by("-publish")
+    queryset = Post.objects.filter(status="PB").order_by("-publish")
     template_name = "post_list.html"
+    context_object_name = "posts"
+
+    def get_context_data(self, kwarg):
+        context = super().get_context_data(kwarg)
+        posts = self.get_object()
+        context["comments"] = Comment.objects.filter(posts=posts)
+
+        return context
 
 class PostDetailView(LoginRequiredMixin, generic.DetailView):
     model = Post
@@ -34,6 +42,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
     model = Post
     template_name = "post_delete.html"
     success_url = reverse_lazy("posts_list")
+    
 
     def test_func(self):
         obj = self.get_object

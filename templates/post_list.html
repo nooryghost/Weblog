@@ -3,6 +3,13 @@
 {% block title %}Post Lists{% endblock %}
 
 {% block content %}
+{% for post in posts %}
+    <h3>author: {{ post.author }}</h3>
+    <h4>title: {{ post.title }}</h4>
+    <p>description: {{ post.description }}</p>
+
 <a href="{% url 'posts_edit' post.pk %}">+Edit</a>
 <a href="{% url 'posts_delete' post.pk %}">-Delete</a>
+{% endfor %}
+
 {% endblock %}
