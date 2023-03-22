@@ -40,8 +40,8 @@ class Post(models.Model):
             return super().save(*args, **kwargs)
         
 class Comment(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     comment = models.TextField()
 
     def __str__(self):

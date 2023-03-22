@@ -7,9 +7,16 @@
     <h3>author: {{ post.author }}</h3>
     <h4>title: {{ post.title }}</h4>
     <p>description: {{ post.description }}</p>
+<div>
+    {% for comment in post.comment_set.all %}
+        {{ comment.author }} | {{ comment }}
+    {% endfor %}
+</div>
+    {% if post.author == request.user %}
+    <a href="{% url 'posts_edit' post.pk %}">+Edit</a>
+    <a href="{% url 'posts_delete' post.pk %}">-Delete</a>
+    {% endif %}
 
-<a href="{% url 'posts_edit' post.pk %}">+Edit</a>
-<a href="{% url 'posts_delete' post.pk %}">-Delete</a>
 {% endfor %}
 
 {% endblock %}

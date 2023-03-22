@@ -1,14 +1,23 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Post Detail {{ object.title}}{% endblock %}
 
 {% block content %}
 <h2>{{ object.title }}</h2>
 <p>{{ object.author }} | {{ object.publish }}</p>
+<p>{{ object.description }}</p>
 
-<p>
-    <a href="{% url 'posts_edit' post.pk %}">+Edit</a>
+<h4>Add Comment</h4>
+<form action="" method="post">{% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit">Add</button>
+</form>
+
+{% if object.author == request.user %}
+    <a href="{% url 'objects_edit' post.pk %}">+Edit</a>
     <a href="{% url 'posts_delete' post.pk %}">-Delete</a>
-</p>
+{% endif %}
+
 <p><a href="{% url 'posts_list' %}">All Posts</a></p>
 {% endblock %}
