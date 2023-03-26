@@ -2,6 +2,7 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
+from django.views import View
 
 from .models import Post, Comment
 from .forms import CommentForm
@@ -21,18 +22,8 @@ class PostListView(generic.ListView):
     template_name = "post_list.html"
     context_object_name = "posts"
 
-class PostDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Post
-    template_name = "post_detail.html"
-
-    def get_contex_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form"] = CommentForm()
-
-        return context
-
 class CommentGet(generic.DetailView):
-    model = Comment
+    model = Post
     template_name = "post_detail.html"
 
     def get_context_data(self, **kwargs):
@@ -41,7 +32,7 @@ class CommentGet(generic.DetailView):
 
         return context
 
-class CommentPost(generic.FormView, SingleObjectMixin):
+class CommentPost(SingleObjectMixin, generic.FormView):
     model = Post
     form_class = CommentForm
     template_name = "post_detail.html"
@@ -61,7 +52,19 @@ class CommentPost(generic.FormView, SingleObjectMixin):
 
     def get_success_url(self):
         post = self.get_object()
-        return reverse("post_detail.html", kwargs={"pk": post.pk})
+        return reverse("posts_detail", kwargs={"pk": post.pk})
+
+class PostDetailView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        view = CommentGet.as_view()
+        
+        return view(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        view = CommentPost.as_view()
+        
+        return view(request, *args, **kwargs)
+    
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Post
