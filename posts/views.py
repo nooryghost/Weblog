@@ -64,7 +64,6 @@ class PostDetailView(LoginRequiredMixin, View):
         view = CommentPost.as_view()
         
         return view(request, *args, **kwargs)
-    
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Post
