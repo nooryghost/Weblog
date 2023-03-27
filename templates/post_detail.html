@@ -10,7 +10,7 @@
 
 <h4>Comments</h4>
 {% for comment in post.comments.all %}
-    {{ comment.author }}| {{ comment }}
+    <ul>{{ comment.author }}| {{ comment }}</ul>
 {% endfor %}
 
 <h4>Add Comment</h4>

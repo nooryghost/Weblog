@@ -5,6 +5,9 @@ from django.urls import reverse
 
 from users.models import User
 
+class IPAdress(models.Model):
+    adress = models.GenericIPAddressField()
+
 class Post(models.Model):
 
     class Status(models.TextChoices):
@@ -49,3 +52,8 @@ class Comment(models.Model):
     
     def get_absolute_url(self):
         return reverse("posts_list")
+    
+class Like(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(IPAdress, related_name="like", blank=True)
