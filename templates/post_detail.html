@@ -9,7 +9,7 @@
 <p>{{ object.description }}</p>
 
 <h4>Comments</h4>
-{% for comment in post.comment_set.all %}
+{% for comment in post.comments.all %}
     {{ comment.author }}| {{ comment }}
 {% endfor %}
 

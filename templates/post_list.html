@@ -8,8 +8,8 @@
     <h4>title: {{ post.title }}</h4>
     <p>description: {{ post.description }}</p>
 <div>
-    {% for comment in post.comment_set.all %}
-        {{ comment.author }} | {{ comment }}
+    {% for comment in post.comments.all %}
+        <ul>{{ comment.author }} | {{ comment }}</ul>
     {% endfor %}
 </div>
     {% if post.author == request.user %}
