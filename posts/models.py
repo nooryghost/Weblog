@@ -5,9 +5,6 @@ from django.urls import reverse
 
 from users.models import User
 
-class IPAdress(models.Model):
-    adress = models.GenericIPAddressField()
-
 class Post(models.Model):
 
     class Status(models.TextChoices):
@@ -23,6 +20,7 @@ class Post(models.Model):
     publish = models.DateTimeField(default=timezone.now)
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, blank=True, related_name="likes")
 
     class Meta:
         ordering = ["-publish"]
@@ -32,7 +30,7 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
         return reverse("posts_detail", kwargs={"pk": self.pk})
     
@@ -41,7 +39,7 @@ class Post(models.Model):
             self.slug == slugify(self.title, allow_unicode=True)
             
             return super().save(*args, **kwargs)
-        
+    
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
@@ -52,8 +50,3 @@ class Comment(models.Model):
     
     def get_absolute_url(self):
         return reverse("posts_list")
-    
-class Like(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(IPAdress, related_name="like", blank=True)

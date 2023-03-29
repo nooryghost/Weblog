@@ -3,6 +3,8 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.views import View
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
 
 from .models import Post, Comment
 from .forms import CommentForm
@@ -53,6 +55,24 @@ class CommentPost(SingleObjectMixin, generic.FormView):
     def get_success_url(self):
         post = self.get_object()
         return reverse("posts_detail", kwargs={"pk": post.pk})
+    
+class PostLike(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        post = Post.objects.get(pk=pk)
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+        if not is_like:
+            post.likes.add(request.user)
+
+        else:
+            post.likes.remove(request.user)
+
+        next = request.POST.get("next", "/")
+        return HttpResponseRedirect(next)
 
 class PostDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -63,7 +83,8 @@ class PostDetailView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         view = CommentPost.as_view()
         
-        return view(request, *args, **kwargs)
+        return view(request, *args, **kwargs)   
+    
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Post
