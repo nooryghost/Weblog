@@ -65,6 +65,7 @@ class PostLike(LoginRequiredMixin, View):
             if like == request.user:
                 is_like = True
                 break
+            
         if not is_like:
             post.likes.add(request.user)
 
